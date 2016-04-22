@@ -1,7 +1,10 @@
 index = 10
 
+arr = []
+
 while index <= 100
-  puts index
-  print "#{index} "
+  arr << index
   index += 5
 end
+
+puts arr
