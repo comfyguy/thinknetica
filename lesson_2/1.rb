@@ -1,4 +1,4 @@
-months_2016 = {
+months = {
   january:   31,
   february:  29,
   march:     31,
@@ -13,10 +13,7 @@ months_2016 = {
   december:  31
 }
 
-months30 = ''
-
-months_2016.each do |month, days|
-  months30 += "#{month.to_s.capitalize}, " if days == 30
+months.each do |month, days|
+  puts month.capitalize if days == 30
 end
-
-puts "#{months30.chop.chop} are 30 days long in the year 2016."
+puts 'are 30 days long.'

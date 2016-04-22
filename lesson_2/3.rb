@@ -1,13 +1,10 @@
-numbers = [1]
+numbers = [1, 1]
 
-loop do
-  if numbers[-2].nil?
-    numbers << numbers[-1]
-  elsif numbers[-1] + numbers[-2] <= 100
-    numbers << numbers[-1] + numbers[-2]
-  else
-    break
-  end
+fibon = 2
+
+while fibon <= 100
+  numbers << fibon
+  fibon = numbers[-1] + numbers[-2]
 end
 
 puts numbers
