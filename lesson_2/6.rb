@@ -13,10 +13,8 @@ loop do
 
   if cart[product].nil?
     cart[product] = { price => quantity }
-  elsif cart[product][price].nil?
-    cart[product].update(price => quantity)
   else
-    cart[product][price] += quantity
+    cart[product].update(price => quantity) { |price,q1,q2| q1+q2 }
   end
 end
 
