@@ -60,4 +60,8 @@ class Train
   def go_forward
     self.current_station += 1 unless route.stations[current_station + 1].nil?
   end
+
+  def go_back
+    self.current_station -= 1 unless route.stations[current_station] == 0
+  end
 end
