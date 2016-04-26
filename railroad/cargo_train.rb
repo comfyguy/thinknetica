@@ -5,7 +5,7 @@ class CargoTrain < Train
 
   def initialize(reg_number, cars)
     super(reg_number)
-    @type = 1
+    @type = 0
     @cars = []
     cars.times { add_car }
   end

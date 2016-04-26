@@ -9,7 +9,7 @@ class Train
 
 #Все остальные методы являются интерфейсом класса/подклассов, поэтому они - паблик
 
-  TYPES = [:cargo, :passenger].freeze
+  TYPES = [[:cargo, 'CargoTrain'], [:passenger, 'PassengerTrain']].freeze
 
   attr_reader :reg_number, :type
 

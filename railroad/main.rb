@@ -42,11 +42,13 @@ loop do
   when 2
     reg_number = input_train_number
     cars = input_cars_amount
-    print "Select train type (0 - #{Train::TYPES[0]}, 1 - #{Train::TYPES[1]}): "
+    puts "Select train type"
+    Train::TYPES.each_with_index do |type, index|
+      puts "#{index} - #{type[0]}"
+    end
     type = gets.to_i
     if trains[reg_number].nil?
-      trains[reg_number] = CargoTrain.new(reg_number, cars) if type == 0
-      trains[reg_number] = PassengerTrain.new(reg_number, cars) if type == 1
+      trains[reg_number] = Object.const_get(Train::TYPES[type][1]).new(reg_number, cars)
     end
   when 3
     reg_number = input_train_number
