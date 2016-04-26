@@ -1,14 +1,23 @@
 class Train
-  TYPES = [:freight, :passenger].freeze
+  protected
 
-  attr_reader :type, :reg_number
+#Геттеры и сеттеры используются внутри класса/подклассов
+
   attr_accessor :speed, :route, :current_station, :cars
 
-  def initialize(reg_number, type, cars)
+  public
+
+#Все остальные методы являются интерфейсом класса/подклассов, поэтому они - паблик
+
+  TYPES = [:cargo, :passenger].freeze
+
+  attr_reader :reg_number, :type
+
+  def initialize(reg_number, cars)
     @reg_number = reg_number
-    @type = type
     @speed = 0
-    @cars = cars
+    @cars = []
+    cars.times {add_car}
   end
 
   def speed_up(increment)
@@ -24,23 +33,7 @@ class Train
   end
 
   def cars_amount
-    puts "The train have #{cars} now."
-  end
-
-  def add_car
-    if speed == 0
-      self.cars += 1
-    else
-      puts 'Please stop train before adding cars.'
-    end
-  end
-
-  def remove_car
-    if speed == 0
-      self.cars -= 1 unless cars == 0
-    else
-      puts 'Please stop train before removing cars.'
-    end
+    puts cars.size
   end
 
   def accept_route(train_route)
@@ -64,4 +57,9 @@ class Train
   def go_back
     self.current_station -= 1 unless current_station.zero?
   end
+
+  def remove_car
+    cars.delete_at(-1) if speed.zero? && cars.size > 0
+  end
+
 end
