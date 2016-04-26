@@ -6,22 +6,8 @@ require_relative 'cargocar'
 require_relative 'station'
 require_relative 'route'
 
-stations = []
-trains = []
-
-def train_by_number(reg_number, trains)
-  trains.each do |train|
-    return train if train.reg_number == reg_number
-  end
-  nil
-end
-
-def station_by_name(name, stations)
-  stations.each do |station|
-    return station if station.name == name
-  end
-  nil
-end
+stations = {}
+trains = {}
 
 def input_station_name
   print 'Enter station name: '
@@ -52,33 +38,33 @@ loop do
   case input
   when 1
     name = input_station_name
-    stations << Station.new(name) if station_by_name(name, stations).nil?
+    stations[name] = Station.new(name) if stations[name].nil?
   when 2
     reg_number = input_train_number
     cars = input_cars_amount
     print 'Select train type (0 - cargo, 1 - passenger): '
     type = gets.to_i
-    if train_by_number(reg_number, trains).nil?
-      trains << CargoTrain.new(reg_number, cars) if type == 0
-      trains << PassengerTrain.new(reg_number, cars) if type == 1
+    if trains[reg_number].nil?
+      trains[reg_number] = CargoTrain.new(reg_number, cars) if type == 0
+      trains[reg_number] = PassengerTrain.new(reg_number, cars) if type == 1
     end
   when 3
     reg_number = input_train_number
     cars = input_cars_amount
-    cars.times { train_by_number(reg_number, trains).add_car }
+    cars.times { trains[reg_number].add_car }
   when 4
     reg_number = input_train_number
     cars = input_cars_amount
-    cars.times { train_by_number(reg_number, trains).remove_car }
+    cars.times { trains[reg_number].remove_car }
   when 5
     name = input_station_name
     reg_number = input_train_number
-    station_by_name(name, stations).accept_train(train_by_number(reg_number, trains))
+    stations[name].accept_train(trains[reg_number])
   when 6
     stations.each { |station| puts station.name }
   when 7
     name = input_station_name
-    station_by_name(name, stations).trains_list
+    stations[name].trains_list
   when 8
     break
   end
