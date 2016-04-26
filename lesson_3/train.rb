@@ -50,15 +50,15 @@ class Train
 
   def show_route
     return if route.nil?
-    puts "Previous station was #{route.station[current_station - 1].name}"\
+    puts "Previous station was #{route.station(current_station - 1).name}"\
     unless current_station.zero?
-    puts "Current station is #{route.station[current_station].name}"
-    puts "Next station will be #{route.station[current_station + 1].name}"\
-    unless route.station[current_station + 1].nil?
+    puts "Current station is #{route.station(current_station).name}"
+    puts "Next station will be #{route.station(current_station + 1).name}"\
+    unless route.station(current_station + 1).nil?
   end
 
   def go_forward
-    self.current_station += 1 unless route.station[current_station + 1].nil?
+    self.current_station += 1 unless route.station(current_station + 1).nil?
   end
 
   def go_back
