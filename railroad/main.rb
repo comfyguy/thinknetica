@@ -42,7 +42,7 @@ loop do
   when 2
     reg_number = input_train_number
     cars = input_cars_amount
-    print 'Select train type (0 - cargo, 1 - passenger): '
+    print "Select train type (0 - #{Train::TYPES[0]}, 1 - #{Train::TYPES[1]}): "
     type = gets.to_i
     if trains[reg_number].nil?
       trains[reg_number] = CargoTrain.new(reg_number, cars) if type == 0
