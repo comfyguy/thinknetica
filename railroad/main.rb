@@ -1,8 +1,8 @@
 require_relative 'train'
-require_relative 'passengertrain'
-require_relative 'cargotrain'
-require_relative 'passengercar'
-require_relative 'cargocar'
+require_relative 'passenger_train'
+require_relative 'cargo_train'
+require_relative 'passenger_car'
+require_relative 'cargo_car'
 require_relative 'station'
 require_relative 'route'
 

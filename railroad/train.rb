@@ -13,11 +13,9 @@ class Train
 
   attr_reader :reg_number, :type
 
-  def initialize(reg_number, cars)
+  def initialize(reg_number)
     @reg_number = reg_number
     @speed = 0
-    @cars = []
-    cars.times { add_car }
   end
 
   def speed_up(increment)
