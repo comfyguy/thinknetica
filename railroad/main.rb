@@ -61,7 +61,7 @@ loop do
     reg_number = input_train_number
     stations[name].accept_train(trains[reg_number]) if trains[reg_number] && stations[name]
   when 6
-    stations.each { |station| puts station.name }
+    stations.each_key { |name| puts name }
   when 7
     name = input_station_name
     stations[name].trains_list if stations[name]
