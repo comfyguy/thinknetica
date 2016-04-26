@@ -58,6 +58,9 @@ class Train
     self.current_station -= 1 unless current_station.zero?
   end
 
+  def add_car
+  end
+
   def remove_car
     cars.delete_at(-1) if speed.zero? && cars > 0
   end
