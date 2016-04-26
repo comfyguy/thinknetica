@@ -51,20 +51,20 @@ loop do
   when 3
     reg_number = input_train_number
     cars = input_cars_amount
-    cars.times { trains[reg_number].add_car }
+    cars.times { trains[reg_number].add_car } if trains[reg_number]
   when 4
     reg_number = input_train_number
     cars = input_cars_amount
-    cars.times { trains[reg_number].remove_car }
+    cars.times { trains[reg_number].remove_car } if trains[reg_number]
   when 5
     name = input_station_name
     reg_number = input_train_number
-    stations[name].accept_train(trains[reg_number])
+    stations[name].accept_train(trains[reg_number]) if trains[reg_number] && stations[name]
   when 6
     stations.each { |station| puts station.name }
   when 7
     name = input_station_name
-    stations[name].trains_list
+    stations[name].trains_list if stations[name]
   when 8
     break
   end
