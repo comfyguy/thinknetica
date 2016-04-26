@@ -17,7 +17,7 @@ class Train
     @reg_number = reg_number
     @speed = 0
     @cars = []
-    cars.times {add_car}
+    cars.times { add_car }
   end
 
   def speed_up(increment)
@@ -59,7 +59,6 @@ class Train
   end
 
   def remove_car
-    cars.delete_at(-1) if speed.zero? && cars.size > 0
+    cars.delete_at(-1) if speed.zero? && cars > 0
   end
-
 end

@@ -1,5 +1,4 @@
 class Route
-
   private
 
   attr_reader :stations
@@ -29,5 +28,4 @@ class Route
   def station(station_index)
     stations[station_index]
   end
-
 end

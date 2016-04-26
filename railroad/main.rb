@@ -23,19 +23,19 @@ def station_by_name(name, stations)
   nil
 end
 
-def get_station_name
+def input_station_name
   print 'Enter station name: '
   gets.chomp
 end
 
-def get_train_number
+def input_train_number
   print 'Enter train registration number: '
-  reg_number = gets.chomp
+  gets.chomp
 end
 
-def get_cars_amount
+def input_cars_amount
   print 'Enter amount of cars: '
-  cars = gets.to_i
+  gets.to_i
 end
 
 loop do
@@ -50,36 +50,36 @@ loop do
   print 'Please enter number from 1 to 8: '
   input = gets.to_i
   case input
-    when 1
-      name = get_station_name
-      stations << Station.new(name) if station_by_name(name,stations).nil?
-    when 2
-      reg_number = get_train_number
-      cars = get_cars_amount
-      print 'Select train type (0 - cargo, 1 - passenger): '
-      type = gets.to_i
-      if train_by_number(reg_number, trains).nil?
-        trains << (CargoTrain.new(reg_number, cars)) if type == 0
-        trains << PassengerTrain.new(reg_number, cars) if type == 1
-      end
-    when 3
-      reg_number = get_train_number
-      cars = get_cars_amount
-      cars.times { train_by_number(reg_number, trains).add_car }
-    when 4
-      reg_number = get_train_number
-      cars = get_cars_amount
-      cars.times { train_by_number(reg_number, trains).remove_car }
-    when 5
-      name = get_station_name
-      reg_number = get_train_number
-      station_by_name(name, stations).accept_train(train_by_number(reg_number, trains))
-    when 6
-      stations.each { |station| puts station.name }
-    when 7
-      name = get_station_name
-      station_by_name(name, stations).trains_list
-    when 8
-      break
+  when 1
+    name = input_station_name
+    stations << Station.new(name) if station_by_name(name, stations).nil?
+  when 2
+    reg_number = input_train_number
+    cars = input_cars_amount
+    print 'Select train type (0 - cargo, 1 - passenger): '
+    type = gets.to_i
+    if train_by_number(reg_number, trains).nil?
+      trains << CargoTrain.new(reg_number, cars) if type == 0
+      trains << PassengerTrain.new(reg_number, cars) if type == 1
+    end
+  when 3
+    reg_number = input_train_number
+    cars = input_cars_amount
+    cars.times { train_by_number(reg_number, trains).add_car }
+  when 4
+    reg_number = input_train_number
+    cars = input_cars_amount
+    cars.times { train_by_number(reg_number, trains).remove_car }
+  when 5
+    name = input_station_name
+    reg_number = input_train_number
+    station_by_name(name, stations).accept_train(train_by_number(reg_number, trains))
+  when 6
+    stations.each { |station| puts station.name }
+  when 7
+    name = input_station_name
+    station_by_name(name, stations).trains_list
+  when 8
+    break
   end
 end
