@@ -63,7 +63,7 @@ class Train
   end
 
   def car_class
-    Object.const_get('Car')
+    Car
   end
 
   protected
