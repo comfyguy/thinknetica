@@ -1,21 +1,17 @@
 class Train
-  protected
 
-#Геттеры и сеттеры используются внутри класса/подклассов
+  TYPES = [{ :type_name => 'cargo', :train_class => 'CargoTrain', :car_class => 'CargoCar' },
+          { :type_name => 'passenger', :train_class => 'PassengerTrain', :car_class => 'PassengerCar' }].freeze
 
-  attr_accessor :speed, :route, :current_station, :cars
+  #Все эти методы являются интерфейсом класса/подклассов, поэтому они - паблик
 
-  public
+  attr_reader :number, :type
 
-#Все остальные методы являются интерфейсом класса/подклассов, поэтому они - паблик
-
-  TYPES = [[:cargo, 'CargoTrain'], [:passenger, 'PassengerTrain']].freeze
-
-  attr_reader :reg_number, :type
-
-  def initialize(reg_number)
-    @reg_number = reg_number
+  def initialize(number, cars)
+    @number = number
     @speed = 0
+    @cars = []
+    cars.times { add_car(self.car_class.new) }
   end
 
   def speed_up(increment)
@@ -56,10 +52,24 @@ class Train
     self.current_station -= 1 unless current_station.zero?
   end
 
-  def add_car
+  def add_car(car)
+    if car.class == car_class && speed.zero?
+      cars << car
+    end
   end
 
   def remove_car
-    cars.delete_at(-1) if speed.zero? && cars > 0
+    cars.delete_at(-1) if speed.zero? && cars.size > 0
   end
+
+  def car_class
+    Object.const_get(Train::TYPES[type][:car_class])
+  end
+
+  protected
+
+#Геттеры и сеттеры используются внутри класса/подклассов
+
+  attr_accessor :speed, :route, :current_station, :cars
+
 end

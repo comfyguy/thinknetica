@@ -1,2 +1,2 @@
-class CargoCar
+class CargoCar < Car
 end
