@@ -63,7 +63,7 @@ class Train
   end
 
   def car_class
-    Object.const_get(Train::TYPES[type][:car_class])
+    Object.const_get('Car')
   end
 
   protected
