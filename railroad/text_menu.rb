@@ -21,7 +21,8 @@ class TextMenu
       when 1
         create_station(station_name)
       when 2
-        create_train(train_type, train_number, cars_amount)
+        type = train_type
+        create_train(type, train_number, create_cars(type, cars_amount))
       when 3
        add_cars_to_train(train_number, cars_amount)
       when 4
@@ -77,7 +78,7 @@ class TextMenu
 
   def add_cars_to_train(number, cars)
     if trains[number]
-      cars.times { trains[number].add_car(new_car(trains[number])) }
+      cars.times { trains[number].add_car(new_car(trains[number].type)) }
     end
   end
 
@@ -97,12 +98,17 @@ class TextMenu
     stations[name].trains_list if stations[name]
   end
 
-  def new_car(train)
-    Object.const_get(Train::TYPES[train.type][:car_class]).new
+  def create_cars(type, amount)
+    cars = []
+    amount.times { cars << new_car(type) }
+    cars
+  end
+
+  def new_car(type)
+    Object.const_get(Train::TYPES[type][:car_class]).new
   end
 
   def new_train(type, number, cars)
     Object.const_get(Train::TYPES[type][:train_class]).new(number, cars)
-  end
-  
+  end  
 end

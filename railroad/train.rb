@@ -11,7 +11,7 @@ class Train
     @number = number
     @speed = 0
     @cars = []
-    cars.times { add_car(self.car_class.new) }
+    cars.each { |car| add_car(car) }
   end
 
   def speed_up(increment)
@@ -27,7 +27,7 @@ class Train
   end
 
   def cars_amount
-    puts cars.size
+    cars.size
   end
 
   def accept_route(train_route)

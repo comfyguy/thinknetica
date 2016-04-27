@@ -17,7 +17,7 @@ class Station
   def trains_list
     puts 'List of trains:'
     trains.each do |train|
-      puts "Train #{train.number}."
+      puts "Train #{train.number}. Cars: #{train.cars_amount}."
     end
   end
 
