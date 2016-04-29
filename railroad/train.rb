@@ -1,17 +1,14 @@
 class Train
 
-  TYPES = [{ :type_name => 'cargo', :train_class => 'CargoTrain', :car_class => 'CargoCar' },
-          { :type_name => 'passenger', :train_class => 'PassengerTrain', :car_class => 'PassengerCar' }].freeze
-
   #Все эти методы являются интерфейсом класса/подклассов, поэтому они - паблик
 
-  attr_reader :number, :type
+  attr_reader :number
 
-  def initialize(number, cars)
+  def initialize(number, cars = 0)
     @number = number
     @speed = 0
     @cars = []
-    cars.each { |car| add_car(car) }
+    cars.each { |car| add_car(car) } unless cars.zero?
   end
 
   def speed_up(increment)
@@ -53,7 +50,7 @@ class Train
   end
 
   def add_car(car)
-    if car.class == car_class && speed.zero?
+    if car.class == self.class.type_of_car && speed.zero?
       cars << car
     end
   end
@@ -62,8 +59,16 @@ class Train
     cars.delete_at(-1) if speed.zero? && cars.size > 0
   end
 
-  def car_class
+  def self.type_of_car
     Car
+  end
+
+  def self.type_of_train
+    'train'
+  end
+
+  def self.subclasses
+    ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
 
   protected

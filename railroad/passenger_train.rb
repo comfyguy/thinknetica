@@ -1,9 +1,8 @@
 class PassengerTrain < Train
-  def initialize(reg_number, cars)
-    @type = 1
-    super
+  def self.type_of_car
+    PassengerCar
   end
-  def car_class
-    Object.const_get(Train::TYPES[type][:car_class])
+  def self.type_of_train
+    'passenger'
   end
 end

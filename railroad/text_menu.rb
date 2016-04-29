@@ -21,8 +21,7 @@ class TextMenu
       when 1
         create_station(station_name)
       when 2
-        type = train_type
-        create_train(type, train_number, create_cars(type, cars_amount))
+        create_train(train_class, train_number, cars_amount)
       when 3
        add_cars_to_train(train_number, cars_amount)
       when 4
@@ -41,6 +40,7 @@ class TextMenu
 
   private
 
+
   attr_reader :stations, :trains
 
   def station_name
@@ -53,12 +53,16 @@ class TextMenu
     gets.chomp
   end
 
-  def train_type
-    puts "Select train type"
-    Train::TYPES.each_with_index do |type, index|
-      puts "#{index} - #{type[:type_name]}"
+  def train_class
+    loop do
+      puts 'Enter train type: '
+      Train.subclasses.each_with_index { |val,index| puts "#{index} - #{val}" }
+      input = gets.to_i
+      if Train.subclasses[input]
+        return Train.subclasses[input]
+        break
+      end
     end
-    type = gets.to_i
   end
 
   def cars_amount
@@ -72,13 +76,14 @@ class TextMenu
 
   def create_train(type, number, cars)
     if trains[number].nil?
-      trains[number] = new_train(type, number, cars)
+      trains[number] = type.new(number)
+      add_cars_to_train(number, cars)
     end
   end
 
   def add_cars_to_train(number, cars)
     if trains[number]
-      cars.times { trains[number].add_car(new_car(trains[number].type)) }
+      cars.times { trains[number].add_car(trains[number].class.type_of_car.new) }
     end
   end
 
@@ -97,18 +102,4 @@ class TextMenu
   def trains_at_station(name)
     stations[name].trains_list if stations[name]
   end
-
-  def create_cars(type, amount)
-    cars = []
-    amount.times { cars << new_car(type) }
-    cars
-  end
-
-  def new_car(type)
-    Object.const_get(Train::TYPES[type][:car_class]).new
-  end
-
-  def new_train(type, number, cars)
-    Object.const_get(Train::TYPES[type][:train_class]).new(number, cars)
-  end  
 end

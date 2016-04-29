@@ -22,9 +22,9 @@ class Station
   end
 
   def trains_by_type(type)
-    puts "List of #{Train::TYPES[type][:type_name]} trains:"
+    puts "List of #{type} trains:"
     trains.each do |train|
-      puts "Train #{train.number}." if train.type == type
+      puts "Train #{train.number}." if train.class.type_of_train == type
     end
   end
 end

@@ -16,8 +16,7 @@ class TextMenu
       puts '7. Trains list at the station.'
       puts '8. Exit'
       print 'Please enter number from 1 to 8: '
-      input = gets.to_i
-      case input
+      case input gets.to_i
       when 1
         create_station(station_name)
       when 2
@@ -25,7 +24,7 @@ class TextMenu
       when 3
        add_cars_to_train(train_number, cars_amount)
       when 4
-        remove_cars_to_train(train_number, cars_amount)
+        remove_cars_from_train(train_number, cars_amount)
       when 5
         accept_train_at_station(station_name, train_number)
       when 6
@@ -48,16 +47,21 @@ class TextMenu
   end
 
   def train_number
-    print 'Enter train registration number: '
+    print 'Enter train number: '
     gets.chomp
   end
 
   def train_type
-    puts "Select train type"
-    Train::TYPES.each_with_index do |type, index|
-      puts "#{index} - #{type[:type_name]}"
+    puts 'Select train type'
+    puts '1 - Passenger'
+    puts '2 - Cargo'
     end
-    type = gets.to_i
+    case input gets.to_i
+    when 1
+      PassengerTrain
+    when 2
+      CargoTrain
+    end
   end
 
   def cars_amount
@@ -71,17 +75,18 @@ class TextMenu
 
   def create_train(type, number, cars)
     if trains[number].nil?
-      trains[number] = Object.const_get(Train::TYPES[type][:train_class]).new(number, cars)
+      trains[number] = type.new(number)
+      add_cars_to_train(number, cars)
     end
   end
 
   def add_cars_to_train(number, cars)
-#    if trains[number]? do
-      #cars.times { trains[number].add_car(Object.const_get(Train::TYPES[type][:car_class]).new) }
-#  end
+    if trains[number]
+      cars.times { trains[number].add_car(trains[number].type_of(:train).new) }
+    end
   end
 
-  def remove_cars_to_train(number, cars)
+  def remove_cars_from_train(number, cars)
     cars.times { trains[number].remove_car } if trains[number]
   end
 
