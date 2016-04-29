@@ -60,7 +60,6 @@ class TextMenu
       input = gets.to_i
       if Train.subclasses[input]
         return Train.subclasses[input]
-        break
       end
     end
   end
