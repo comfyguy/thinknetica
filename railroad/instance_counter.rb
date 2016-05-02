@@ -13,6 +13,9 @@ module InstanceCounter
   end
 
   module InstanceMethods
+
+    private
+    
     def register_instance
       self.class.class_variable_set('@@instances', self.class.class_variable_get('@@instances') + 1)
     end
