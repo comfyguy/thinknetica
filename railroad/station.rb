@@ -1,4 +1,6 @@
 class Station
+  include CommonMethods
+
   attr_reader :name, :trains
 
   def initialize(name)
@@ -27,4 +29,5 @@ class Station
       puts "Train #{train.number}." if train.class.type_of_train == type
     end
   end
+
 end

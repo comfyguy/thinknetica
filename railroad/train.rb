@@ -1,14 +1,18 @@
 class Train
 
+  include CommonMethods
+  include InstanceCounter
+
   #Все эти методы являются интерфейсом класса/подклассов, поэтому они - паблик
 
-  attr_reader :number
+  attr_reader :number 
 
   def initialize(number, cars = 0)
-    @number = number
+    @number = number.to_s
     @speed = 0
     @cars = []
     cars.each { |car| add_car(car) } unless cars.zero?
+    register_instance
   end
 
   def speed_up(increment)
@@ -67,9 +71,14 @@ class Train
     'train'
   end
 
+  def self.find(number)
+    self.all.select { |train| train.number == number.to_s }
+  end
+
   def self.subclasses
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
+
 
   protected
 

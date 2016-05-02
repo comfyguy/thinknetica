@@ -45,12 +45,12 @@ class TextMenu
 
   def station_name
     print 'Enter station name: '
-    gets.chomp
+    gets.to_s.chomp
   end
 
   def train_number
     print 'Enter train number: '
-    gets.chomp
+    gets.to_s.chomp
   end
 
   def train_class
