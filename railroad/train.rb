@@ -15,6 +15,12 @@ class Train
     validate!
   end
 
+  def valid?
+    validate!
+  rescue
+    false
+  end
+
   def speed_up(increment)
     self.speed += increment
   end
@@ -79,18 +85,11 @@ class Train
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
 
-  def valid?
-    vaildate!
-  rescue
-    false
-  end
-
   protected
 
   attr_accessor :speed, :route, :current_station, :cars
 
   def validate!
-    raise 'Train id can\'t be nil' if id.nil?
     raise 'Train id should be a string' if id.class != String
     raise 'Train id has invalid format' if id !~ ID_FORMAT
     true

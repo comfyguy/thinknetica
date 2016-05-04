@@ -8,7 +8,7 @@ module CommonMethods
     def all
       instances = {}
       ObjectSpace.each_object(self) do |instance|
-        instances[instance.id] = instance
+        instances[instance.id] = instance if instance.valid?
       end
       instances
     end

@@ -38,8 +38,7 @@ class Station
   protected
 
   def validate!
-    raise 'Station name can\'t be nil' if id.nil?
-    raise 'Station name should be String' if id.class != String
+    raise 'Station name should be a string' if id.class != String
     raise 'Station name should be at least 3 characters long' if id.length < 3
     true
   end
