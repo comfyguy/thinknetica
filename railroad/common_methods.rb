@@ -6,7 +6,11 @@ module CommonMethods
 
   module ClassMethods
     def all
-      ObjectSpace.each_object(self).to_a
+      instances = {}
+      ObjectSpace.each_object(self) do |instance|
+        instances[instance.id] = instance
+      end
+      instances
     end
   end
 

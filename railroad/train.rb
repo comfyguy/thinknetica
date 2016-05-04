@@ -1,18 +1,18 @@
 class Train
 
   include CommonMethods
-  include InstanceCounter
+  include Vendor
 
-  #Все эти методы являются интерфейсом класса/подклассов, поэтому они - паблик
+  ID_FORMAT = /[a-z0-9]{3}-?[a-z0-9]{2}$/i
 
-  attr_reader :number 
+  attr_reader :id 
 
-  def initialize(number, cars = 0)
-    @number = number.to_s
+  def initialize(id, cars = 0)
+    @id = id
     @speed = 0
     @cars = []
-    cars.each { |car| add_car(car) } unless cars.zero?
-    register_instance
+    cars.each { |car| add_car(car) } unless cars == 0
+    validate!
   end
 
   def speed_up(increment)
@@ -20,7 +20,7 @@ class Train
   end
 
   def current_speed
-    puts "Current speed id #{speed}"
+    speed
   end
 
   def stop
@@ -38,10 +38,10 @@ class Train
 
   def show_route
     return if route.nil?
-    puts "Previous station was #{route.station(current_station - 1).name}"\
+    puts "Previous station was #{route.station(current_station - 1).id}"\
     unless current_station.zero?
-    puts "Current station is #{route.station(current_station).name}"
-    puts "Next station will be #{route.station(current_station + 1).name}"\
+    puts "Current station is #{route.station(current_station).id}"
+    puts "Next station will be #{route.station(current_station + 1).id}"\
     unless route.station(current_station + 1).nil?
   end
 
@@ -54,9 +54,9 @@ class Train
   end
 
   def add_car(car)
-    if car.class == self.class.type_of_car && speed.zero?
-      cars << car
-    end
+    raise 'Incorrect railroad car type' if car.class != self.class.type_of_car
+    raise 'You should stop the train first' unless speed.zero?
+    cars << car
   end
 
   def remove_car
@@ -71,19 +71,28 @@ class Train
     'train'
   end
 
-  def self.find(number)
-    self.all.select { |train| train.number == number.to_s }
+  def self.find(id)
+    self.all[id]
   end
 
   def self.subclasses
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
 
+  def valid?
+    vaildate!
+  rescue
+    false
+  end
 
   protected
 
-#Геттеры и сеттеры используются внутри класса/подклассов
-
   attr_accessor :speed, :route, :current_station, :cars
 
+  def validate!
+    raise 'Train id can\'t be nil' if id.nil?
+    raise 'Train id should be a string' if id.class != String
+    raise 'Train id has invalid format' if id !~ ID_FORMAT
+    true
+  end
 end

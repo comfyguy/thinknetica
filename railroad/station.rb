@@ -1,11 +1,12 @@
 class Station
   include CommonMethods
 
-  attr_reader :name, :trains
+  attr_reader :id, :trains
 
-  def initialize(name)
-    @name = name
+  def initialize(id)
+    @id = id
     @trains = []
+    validate!
   end
 
   def accept_train(train)
@@ -17,17 +18,29 @@ class Station
   end
 
   def trains_list
-    puts 'List of trains:'
-    trains.each do |train|
-      puts "Train #{train.number}. Cars: #{train.cars_amount}."
-    end
+    trains
   end
 
   def trains_by_type(type)
-    puts "List of #{type} trains:"
+    output = []
     trains.each do |train|
-      puts "Train #{train.number}." if train.class.type_of_train == type
+      output << train if train.class.type_of_train == type
     end
+    output
   end
 
+  def valid?
+    validate!
+  rescue
+    false
+  end
+
+  protected
+
+  def validate!
+    raise 'Station name can\'t be nil' if id.nil?
+    raise 'Station name should be String' if id.class != String
+    raise 'Station name should be at least 3 characters long' if id.length < 3
+    true
+  end
 end

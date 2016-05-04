@@ -1,5 +1,6 @@
 require_relative 'common_methods'
 require_relative 'instance_counter'
+require_relative 'vendor'
 require_relative 'train'
 require_relative 'car'
 require_relative 'passenger_train'

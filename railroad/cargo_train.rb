@@ -1,8 +1,8 @@
 class CargoTrain < Train
   def self.type_of_car
-    PassengerCar
+    CargoCar
   end
   def self.type_of_train
-    'passenger'
+    'cargo'
   end
 end
