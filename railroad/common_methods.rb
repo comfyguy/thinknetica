@@ -7,8 +7,9 @@ module CommonMethods
   module ClassMethods
     def all
       instances = {}
+      ObjectSpace.garbage_collect
       ObjectSpace.each_object(self) do |instance|
-        instances[instance.id] = instance if instance.valid?
+        instances[instance.id] = instance
       end
       instances
     end
