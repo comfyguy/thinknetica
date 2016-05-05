@@ -13,6 +13,12 @@ module CommonMethods
       end
       instances
     end
+    def find(id)
+      self.all[id]
+    end
+    def foreach
+      self.all.each_value { |v| yield(v) }
+    end      
   end
 
   module InstanceMethods

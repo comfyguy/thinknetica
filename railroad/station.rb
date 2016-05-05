@@ -9,16 +9,12 @@ class Station
     validate!
   end
 
-  def accept_train(train)
-    trains << train
+  def accept_trains(*train)
+    train.each { |train| trains << train }
   end
 
-  def dispatch_train(train)
-    trains.delete(train)
-  end
-
-  def trains_list
-    trains
+  def dispatch_trains(*train)
+    train.each { |train| trains.delete(train) }
   end
 
   def trains_by_type(type)

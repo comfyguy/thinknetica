@@ -5,7 +5,7 @@ class Train
 
   ID_FORMAT = /[a-z0-9]{3}-?[a-z0-9]{2}$/i
 
-  attr_reader :id 
+  attr_reader :id, :cars
 
   def initialize(id, cars = 0)
     @id = id
@@ -77,17 +77,14 @@ class Train
     'train'
   end
 
-  def self.find(id)
-    self.all[id]
-  end
-
   def self.subclasses
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
 
   protected
 
-  attr_accessor :speed, :route, :current_station, :cars
+  attr_accessor :speed, :route, :current_station
+  attr_writer :cars
 
   def validate!
     raise 'Train id should be a string' if id.class != String
