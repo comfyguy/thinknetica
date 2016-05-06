@@ -17,6 +17,7 @@ module CommonMethods
       self.all[id]
     end
     def foreach
+      ObjectSpace.garbage_collect
       ObjectSpace.each_object(self) { |obj| yield(obj) }
     end      
   end
