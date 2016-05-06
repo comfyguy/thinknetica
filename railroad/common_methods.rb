@@ -17,7 +17,7 @@ module CommonMethods
       self.all[id]
     end
     def foreach
-      self.all.each_value { |v| yield(v) }
+      ObjectSpace.each_object(self) { |obj| yield(obj) }
     end      
   end
 
