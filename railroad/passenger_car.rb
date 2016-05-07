@@ -1,30 +1,12 @@
 class PassengerCar < Car
 
-  attr_reader :seats_taken
-
-  def initialize(max_capacity)
-    super
-    validate!
-    @seats_taken = 0
+  def take_space
+    raise 'This passenger car is full' if space_taken == space
+    self.space_taken += 1
   end
-
-  def take_seat
-    raise 'Maximum capacity reached' if seats_taken == max_capacity
-    self.seats_taken += 1
-  end
-
-  def free_seats
-    max_capacity - seats_taken
-  end
-
-  private
-
-  attr_writer :seats_taken
-  attr_reader :max_capacity
 
   def validate!
-    raise 'Capacity should be an integer' if max_capacity.class != Fixnum
-    @max_capacity = max_capacity
+    raise 'Capacity should be a positive integer' unless space.is_a?(Integer) && space > 0
     true
   end
 end

@@ -1,29 +1,25 @@
 class Route
 
-  def initialize(start_station, end_station)
-    @stations = [start_station, end_station]
+  attr_reader :stations
+
+  def initialize(first, last)
+    @stations = [first, last]
     validate!
   end
 
   def add_station(station)
-    raise 'All route points should be a Station class objects' if station.class != Station
+    station_test(station)
     stations.insert(-2, station)
   end
 
   def remove_station(station)
-    if station != stations.first && station != stations.last
-      stations.delete(station)
-    else
-      raise 'You can not delete start and end points of the route'
-    end
+    raise 'You can not delete start and end points of the route' unless\
+    station != stations.first && station != stations.last
+    stations.delete(station)
   end
 
   def stations_list
     stations.each { |station| puts station.id }
-  end
-
-  def station(station_index)
-    stations[station_index]
   end
 
   def valid?
@@ -34,12 +30,14 @@ class Route
 
   private
 
-  attr_reader :stations
-
   def validate!
     stations.each do |station|
-    raise 'All route points should be a Station class objects' if station.class != Station
+      station_test(station)
     end
     true
+  end
+
+  def station_test!(station)
+    raise 'All route points should be a Station class objects' unless station.is_a?(Station)
   end
 end

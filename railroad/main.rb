@@ -1,4 +1,4 @@
-require_relative 'common_methods'
+require_relative 'instances_storage'
 require_relative 'instance_counter'
 require_relative 'vendor'
 require_relative 'train'
@@ -11,7 +11,8 @@ require_relative 'station'
 require_relative 'route'
 require_relative 'text_menu'
 
-TextMenu.new.run
+menu = TextMenu.new
+menu.run
 
 def fill_cargo(i)
   arr = []
@@ -33,24 +34,18 @@ def rand_pass
   PassengerTrain.new(rand(10000..99999).to_s, fill_pass(rand(1..5)))
 end  
 
-msk = Station.new('MSK')
-spb = Station.new('SPB')
-ekb = Station.new('EKB')
+stations = [Station.new('MSK'),Station.new('SPB'),Station.new('EKB')]
 
-msk.accept_trains(rand_cargo, rand_pass)
-spb.accept_trains(rand_cargo, rand_pass)
-ekb.accept_trains(rand_cargo, rand_pass)
-
-Station.foreach do |station|
+stations.each do |station|
+  station.accept_train(rand_cargo)
+  station.accept_train(rand_pass)
   puts "Station ID: #{station.id}. Trains list:"
   puts '-------------------------'
-  station.trains.each do |train|
+
+  station.each_train do |train|
     puts "Train id: #{train.id}. Train type: #{train.class.type_of_train}. Cars list:"
     puts '-------------------------'
-    train.cars.each do |car|
-      puts "Car id: #{car.id}. Type: passenger. Seats taken: #{car.seats_taken}. Free seats: #{car.free_seats} " if car.class == PassengerCar
-      puts "Car id: #{car.id}. Type: cargo. Space used: #{car.space_used}. Free space: #{car.free_space} " if car.class == CargoCar
-    end
+    menu.send :show_cars, train.id
     puts '-------------------------'
   end
 end

@@ -1,34 +1,13 @@
 class CargoCar < Car
 
-  attr_reader :space_used
-
-  def initialize(max_capacity)
-    super
-    validate!
-    @space_used = 0
+  def take_space(cargo)
+    raise 'Cargo volume should be a positive number' unless cargo.is_a?(Numeric) && cargo > 0
+    raise 'Not enough free space' if space_taken + cargo > space
+    self.space_taken += cargo
   end
-
-
-  def load(cargo)
-    raise 'Cargo volume should be a number'\
-    unless cargo.class == Fixnum || cargo.class == Float
-    raise 'Maximum capacity reached' if space_used + cargo > max_capacity
-    self.space_used += cargo
-  end
-
-  def free_space
-    max_capacity - space_used
-  end
-
-  private
-
-  attr_writer :space_used
-  attr_reader :max_capacity
 
   def validate!
-    raise 'Capacity should be a number'\
-    unless max_capacity.class == Fixnum || max_capacity.class == Float
+    raise 'Capacity should be a positive number' unless space.is_a?(Numeric) && space > 0
     true
   end
-
 end

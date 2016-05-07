@@ -1,6 +1,6 @@
 class Train
 
-  include CommonMethods
+  include InstancesStorage
   include Vendor
 
   ID_FORMAT = /[a-z0-9]{3}-?[a-z0-9]{2}$/i
@@ -11,14 +11,9 @@ class Train
     @id = id
     @speed = 0
     @cars = []
+    validate!
     cars.each { |car| add_car(car) } unless cars == 0
-    validate!
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
+    store_instance
   end
 
   def speed_up(increment)
@@ -38,6 +33,7 @@ class Train
   end
 
   def accept_route(train_route)
+    raise 'Route is not valid' unless train_route.is_a?(Route)
     self.route = train_route
     self.current_station = 0
   end
@@ -45,40 +41,42 @@ class Train
   def show_route
     return if route.nil?
     puts "Previous station was #{route.station(current_station - 1).id}"\
-    unless current_station.zero?
+     if previous_station?
     puts "Current station is #{route.station(current_station).id}"
     puts "Next station will be #{route.station(current_station + 1).id}"\
-    unless route.station(current_station + 1).nil?
+     if next_station?
   end
 
   def go_forward
-    self.current_station += 1 unless route.station(current_station + 1).nil?
+    raise 'The train has reached its final destination' unless next_station?
+    self.current_station += 1
   end
 
   def go_back
-    self.current_station -= 1 unless current_station.zero?
+    raise 'The train is already at the first station' unless previous_station?
+    self.current_station -= 1
   end
 
   def add_car(car)
-    raise 'Incorrect railroad car type' if car.class != self.class.type_of_car
-    raise 'You should stop the train first' unless speed.zero?
+    raise 'Car is not valid' if car.class != self.class.type_of_car
+    check_speed!
     cars << car
   end
 
   def remove_car
-    cars.delete_at(-1) if speed.zero? && cars.size > 0
+    raise 'The train has no cars' unless cars.size > 0
+    check_speed!
+    cars.delete_at(-1)
   end
 
-  def self.type_of_car
-    Car
+  def each_car(&block)
+    cars.each { |car| yield(car) }
   end
 
-  def self.type_of_train
-    'train'
-  end
-
-  def self.subclasses
-    ObjectSpace.each_object(Class).select { |klass| klass < self }
+  def valid?
+    validate!
+  rescue
+    false
   end
 
   protected
@@ -89,6 +87,22 @@ class Train
   def validate!
     raise 'Train id should be a string' if id.class != String
     raise 'Train id has invalid format' if id !~ ID_FORMAT
+    raise 'You are not allowed to create instances of base class' if\
+     self.class == Train
     true
   end
+
+  def check_speed!
+    raise 'You should stop the train first' unless speed.zero?
+  end
+
+  def next_station?
+    route.station(current_station + 1)
+  end
+
+  def previous_station?
+    false
+    true if current_station > 0
+  end
+
 end
