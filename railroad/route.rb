@@ -1,5 +1,4 @@
 class Route
-
   attr_reader :stations
 
   def initialize(first, last)
@@ -8,7 +7,7 @@ class Route
   end
 
   def add_station(station)
-    station_test(station)
+    station_test!(station)
     stations.insert(-2, station)
   end
 
@@ -24,15 +23,15 @@ class Route
 
   def valid?
     validate!
-    rescue
-    false    
+  rescue
+    false
   end
 
   private
 
   def validate!
     stations.each do |station|
-      station_test(station)
+      station_test!(station)
     end
     true
   end

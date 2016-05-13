@@ -17,7 +17,6 @@ class Car
     space - space_taken
   end
 
-
   protected
 
   attr_writer :space_taken
@@ -26,5 +25,4 @@ class Car
   def validate!
     raise 'You are not allowed to create instances of base class'
   end
-
 end

@@ -1,87 +1,42 @@
 class TextMenu
+  include Input
+
+  BLANK = '-----------------------------------'.freeze
+
+  attr_reader :stations, :trains
+
+  def run
+    current_menu = menu.each_key.to_a
+    loop do
+      puts BLANK
+      current_menu.each_with_index { |option, index| puts "#{index} - #{option}" }
+      puts BLANK
+      puts 'Please select one of these options:'
+      input = gets.chomp.to_i
+      puts BLANK
+      menu[current_menu[input]].call
+    end
+  end
 
   def initialize
     @stations = {}
     @trains = {}
   end
 
-  def run
-    loop do
-      puts '---------------------------------'
-      puts '1. Create a station.'
-      puts '2. Create a train'
-      puts '3. Add cars to the train.'
-      puts '4. Remove cars from the train.'
-      puts '5. Accept a train at the station.'
-      puts '6. Stations list.'
-      puts '7. Trains list at the station.'
-      puts '8. Cars list.'
-      puts '9. Load car.'
-      puts '10. Exit'
-      print 'Please enter number from 1 to 10: '
-      input = gets.to_i
-      puts '---------------------------------'
-      case input
-      when 1
-        create_station(station_id)
-      when 2
-        create_train(train_class, train_id, cars_amount)
-      when 3
-       add_cars_to_train(train_id, cars_amount)
-      when 4
-        remove_cars_from_train(train_id, cars_amount)
-      when 5
-        accept_train_at_station(station_id, train_id)
-      when 6
-        stations_list
-      when 7
-        trains_at_station(station_id)
-      when 8
-        show_cars(train_id)
-      when 9
-        load_car(car_id)
-      when 10
-        break
-      end
-    end
-  end
-
   private
 
-  attr_reader :stations, :trains
-
-  def station_id
-    print 'Enter station name: '
-    gets.to_s.chomp
-  end
-
-  def car_id
-    print 'Enter car id: '
-    gets.chomp.to_i
-  end
-
-  def train_id
-    print 'Enter train id: '
-    gets.to_s.chomp
-  end
-
-  def train_class
-    loop do
-      puts 'Enter train type (1 - Passenger, 2 - Cargo):'
-      input = gets.to_i
-      return PassengerTrain if input == 1
-      return CargoTrain if input == 2
-    end
-  end
-
-  def cars_amount
-    print 'Enter amount of cars: '
-    gets.to_i
-  end
-
-  def max_capacity
-    print 'Enter max capacity of car: '
-    gets.to_i
+  def menu
+    { 'Create a station.' => proc { create_station(station_id) },
+      'Create a train' => proc { create_train(train_class, train_id, cars_amount) },
+      'Add cars to the train.' => proc { add_cars_to_train(train_id, cars_amount) },
+      'Remove cars from the train.' => proc { remove_cars_from_train(train_id, cars_amount) },
+      'Accept a train at the station.' => proc { accept_train_at_station(station_id, train_id) },
+      'Stations list.' => proc { stations_list },
+      'Trains list at the station.' => proc { trains_at_station(station_id) },
+      'Cars list.' => proc { cars_list(train_id) },
+      'Load car.' => proc { load_car(car_id) },
+      'Exit.' => proc { raise StopIteration }
+    }
   end
 
   def create_station(id)
@@ -114,8 +69,7 @@ class TextMenu
   end
 
   def accept_train_at_station(station_id, train_id)
-    stations[station_id].accept_train(trains[train_id])\
-     if trains[train_id] && stations[station_id]
+    stations[station_id].accept_train(trains[train_id]) if trains[train_id] && stations[station_id]
   rescue RuntimeError => e
     puts e.message
   end
@@ -125,45 +79,48 @@ class TextMenu
   end
 
   def trains_at_station(id)
-    stations[id].each_train do |train|
-    puts "Train id: #{train.id}. Train type: #{train.class.type_of_train}. Amount of cars: #{train.cars_amount}"\
-     if stations[id]
-   end
+    if stations[id]
+      stations[id].each_train do |train|
+        puts "Train id: #{train.id}. Train type: #{train.class.type_of_train}."
+        puts " Amount of cars: #{train.cars_amount}."
+      end
+    end
   end
 
-  def show_cars(id)
-    if Train.all[id]
-      Train.all[id].each_car do |car|
-        puts "Car id: #{car.id}. Type: passenger. Seats taken: #{car.space_taken}. Free seats: #{car.free_space} "\
-        if car.class == PassengerCar
-        puts "Car id: #{car.id}. Type: cargo. Space used: #{car.space_taken}. Free space: #{car.free_space} "\
-        if car.class == CargoCar
+  def cars_list(id)
+    raise "There is no train with id: #{id}" if Train.all[id].nil?
+    Train.all[id].each_car do |car|
+      if car.class == PassengerCar
+        puts "Car id: #{car.id}. Type: passenger."
+        puts "Seats taken: #{car.space_taken}. Free seats: #{car.free_space}."
       end
-    else
-      puts "There is no train with id: #{id}"
+      if car.class == CargoCar
+        puts "Car id: #{car.id}. Type: cargo."
+        puts "Space used: #{car.space_taken}. Free space: #{car.free_space}."
+      end
     end
   end
 
   def load_car(id)
     car = Car.all[id]
-    if car
-      if car.class == PassengerCar
-        puts "This car has #{car.free_space} free seats."
-        print 'How many seats you want to take?'
-        gets.to_i.times { car.take_space }
-        puts "Free seats after: #{car.free_space}. Seats taken: #{car.space_taken}."
-      end
-      if car.class == CargoCar
-        puts "This car has #{car.free_space} free space."
-        print 'How much cargo you want to load?'
-        car.take_space(gets.to_f)
-        puts "Free space after #{car.free_space}. Space used: #{car.space_taken}."
-      end
-    else
-      puts "There is no car with id: #{id}."
-    end
+    raise "There is no car with id: #{id}." if car.nil?
+    load_passenger(car) if car.class == PassengerCar
+    load_cargo if car.class == CargoCar
   rescue RuntimeError => e
     puts e.message
   end
 
+  def load_passenger(car)
+    puts "This car has #{car.free_space} free seats."
+    print 'How many seats you want to take?'
+    gets.to_i.times { car.take_space }
+    puts "Free seats after: #{car.free_space}. Seats taken: #{car.space_taken}."
+  end
+
+  def load_cargo(car)
+    puts "This car has #{car.free_space} free space."
+    print 'How much cargo you want to load?'
+    car.take_space(gets.to_f)
+    puts "Free space after #{car.free_space}. Space used: #{car.space_taken}."
+  end
 end

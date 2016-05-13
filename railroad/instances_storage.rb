@@ -1,5 +1,4 @@
 module InstancesStorage
-
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
@@ -11,13 +10,11 @@ module InstancesStorage
     def all
       @@all
     end
-
   end
 
   module InstanceMethods
-
     private
-    
+
     def store_instance
       self.class.superclass.all[id] = self
     rescue NoMethodError

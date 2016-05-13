@@ -1,5 +1,4 @@
 module InstanceCounter
-
   def self.included(base)
     base.class_variable_set('@@instances', 0)
     base.extend ClassMethods
@@ -8,14 +7,13 @@ module InstanceCounter
 
   module ClassMethods
     def instances
-      self.class_variable_get('@@instances')
+      class_variable_get('@@instances')
     end
   end
 
   module InstanceMethods
-
     private
-    
+
     def register_instance
       self.class.class_variable_set('@@instances', self.class.class_variable_get('@@instances') + 1)
     end

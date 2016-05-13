@@ -1,5 +1,4 @@
 class Train
-
   include InstancesStorage
   include Vendor
 
@@ -64,13 +63,13 @@ class Train
   end
 
   def remove_car
-    raise 'The train has no cars' unless cars.size > 0
+    raise 'The train has no cars' if cars.empty?
     check_speed!
     cars.delete_at(-1)
   end
 
-  def each_car(&block)
-    cars.each { |car| yield(car) }
+  def each_car
+    block_given? ? cars.each { |car| yield(car) } : cars
   end
 
   def valid?
@@ -97,12 +96,10 @@ class Train
   end
 
   def next_station?
-    route.station(current_station + 1)
+    !!route.station(current_station + 1)
   end
 
   def previous_station?
-    false
-    true if current_station > 0
+    current_station > 0 ? true : false
   end
-
 end
